@@ -36,6 +36,9 @@ class KasinaProApp {
             await this.showSplash();
             console.log('[Kasina] Splash done');
             
+            // Hide splash BEFORE showing safety modal (z-index conflict)
+            document.getElementById('splashScreen').classList.add('hidden');
+            
             if (!localStorage.getItem('kasina-safety-accepted')) {
                 console.log('[Kasina] Showing safety modal...');
                 await this.showSafetyModal();
@@ -69,7 +72,6 @@ class KasinaProApp {
             this.selectProfile('theta');
             console.log('[Kasina] Profile selected');
             
-            document.getElementById('splashScreen').classList.add('hidden');
             console.log('[Kasina] ✓ App ready!');
         } catch(e) {
             console.error('[Kasina] INIT ERROR:', e);
