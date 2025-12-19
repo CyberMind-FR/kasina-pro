@@ -1,16 +1,16 @@
 # Kasina θ Pro
 
-## Neuro-Entrainment System v2.0.0
+## Neuro-Entrainment System v2.1.0
 
 > *"La conscience est une musique que l'on peut accorder"*
 
-![Version](https://img.shields.io/badge/version-2.0.0-purple)
+![Version](https://img.shields.io/badge/version-2.1.0-purple)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![PWA](https://img.shields.io/badge/PWA-offline-blue)
 
 **Kasina θ Pro** est une Progressive Web App open-source de génération de sessions audio-visuelles pour la méditation, l'entraînement cérébral et le bien-être. Elle combine battements binauraux, stimulation lumineuse photic, géométrie sacrée et synchronisation physiologique.
 
-🌐 **[Demo Live](https://cybermind.fr/apps/kasina-pro/)** | 📖 **[Blog Article](https://cybermind.fr/2024/kasina-theta-pro/)**
+🌐 **[Demo Live](https://brain.maegia.tv)** | 📖 **[Blog Article](https://cybermind.fr/2024/kasina-theta-pro/)**
 
 ---
 
@@ -51,11 +51,15 @@ Le projet intègre :
 - **Anti-habituation** : micro-variations aléatoires
 - **Clock maître** : `AudioContext.currentTime` (sample-accurate)
 
-### 🌀 Visual Engine
+### 🌀 Visual Engine v2.1
 - **Géométries sacrées** : Fleur de Vie, Sri Yantra, Métatron, Torus, Fibonacci, Vesica Piscis
 - Mandalas configurables (pétales, couches, rotation)
-- **Effets halo** pulsants synchronisés
-- Système de particules réactif
+- **Effets halo** multi-couches pulsants
+- Système de **particules réactives** au beat/breath
+- **Ripples** : ondulations concentriques sur chaque beat
+- **Trails/Afterglow** : persistance hypnotique
+- **Sync respiration** : expansion/contraction dynamique
+- **Sync beat** : pulse exponentiel avec glow intensifié
 
 ### 👓 GanzFrames / Lumière
 - Beat 0.5-40 Hz avec phase L/R
@@ -213,7 +217,7 @@ MIT License - Libre utilisation et modification.
 ## 📞 Contact
 
 - **Blog** : [cybermind.fr](https://cybermind.fr)
-- **GitHub** : [github.com/gandalf-music/kasina-pro](https://github.com/gandalf-music/kasina-pro)
+- **GitHub** : [github.com/CyberMind-FR/kasina-pro](https://github.com/CyberMind-FR/kasina-pro)
 - **Auteur** : Gandalf @ CyberMind
 
 ---
