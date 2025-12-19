@@ -5,9 +5,14 @@
 
 class KasinaProApp {
     constructor() {
-        this.audioEngine = new AudioEngine();
-        this.visualEngine = null;
-        this.sensors = new SensorsManager();
+        console.log('[Kasina] Initializing...');
+        try {
+            this.audioEngine = new AudioEngine();
+            this.visualEngine = null;
+            this.sensors = new SensorsManager();
+        } catch(e) {
+            console.error('[Kasina] Error creating engines:', e);
+        }
         this.currentProfile = 'theta';
         this.currentSubprofile = null;
         this.currentSweep = null;
@@ -26,18 +31,50 @@ class KasinaProApp {
     }
     
     async init() {
-        await this.showSplash();
-        if (!localStorage.getItem('kasina-safety-accepted')) await this.showSafetyModal();
-        this.initUI();
-        this.initTabs();
-        this.initProfiles();
-        this.initControls();
-        this.initSensors();
-        this.initPWA();
-        this.visualEngine = new VisualEngine('mandalaCanvas');
-        this.visualEngine.startPreviewLoop();
-        this.selectProfile('theta');
-        document.getElementById('splashScreen').classList.add('hidden');
+        console.log('[Kasina] init() started');
+        try {
+            await this.showSplash();
+            console.log('[Kasina] Splash done');
+            
+            if (!localStorage.getItem('kasina-safety-accepted')) {
+                console.log('[Kasina] Showing safety modal...');
+                await this.showSafetyModal();
+            }
+            console.log('[Kasina] Safety accepted');
+            
+            this.initUI();
+            console.log('[Kasina] UI done');
+            
+            this.initTabs();
+            console.log('[Kasina] Tabs done');
+            
+            this.initProfiles();
+            console.log('[Kasina] Profiles done');
+            
+            this.initControls();
+            console.log('[Kasina] Controls done');
+            
+            this.initSensors();
+            console.log('[Kasina] Sensors done');
+            
+            this.initPWA();
+            console.log('[Kasina] PWA done');
+            
+            this.visualEngine = new VisualEngine('mandalaCanvas');
+            console.log('[Kasina] VisualEngine created');
+            
+            this.visualEngine.startPreviewLoop();
+            console.log('[Kasina] Preview started');
+            
+            this.selectProfile('theta');
+            console.log('[Kasina] Profile selected');
+            
+            document.getElementById('splashScreen').classList.add('hidden');
+            console.log('[Kasina] ✓ App ready!');
+        } catch(e) {
+            console.error('[Kasina] INIT ERROR:', e);
+            document.getElementById('splashScreen').innerHTML = '<div style="color:red;padding:20px;">Error: ' + e.message + '</div>';
+        }
     }
     
     async showSplash() { return new Promise(r => setTimeout(r, 1500)); }
