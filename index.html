@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Kasina θ Pro - Générateur de sessions audio-visuelles pour méditation et entraînement cérébral avec AudioStrobe et SpectraStrobe">
+    
+    <title>Kasina θ Pro — Neuro-Entrainment System</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <div class="splash-mandala"></div>
+            <h1 class="splash-title">Kasina<span>θ</span>Pro</h1>
+            <p class="splash-subtitle">Neuro-Entrainment System</p>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
+    <!-- SAFETY WARNING MODAL -->
+    <div id="safetyModal" class="modal" style="display:none;">
+        <div class="modal-content safety-modal">
+            <div class="safety-icon">⚠️</div>
+            <h2>Avertissements Importants</h2>
+            <div class="safety-content">
+                <div class="safety-item critical">
+                    <strong>🚨 ÉPILEPSIE</strong>
+                    <p>Les stimulations lumineuses peuvent déclencher des crises chez les personnes épileptiques ou photosensibles. Ne pas utiliser si vous avez des antécédents d'épilepsie.</p>
+                </div>
+                <div class="safety-item">
+                    <strong>🎧 Volume Audio</strong>
+                    <p>Commencez toujours avec un volume faible. Les battements binauraux nécessitent un casque stéréo.</p>
+                </div>
+                <div class="safety-item">
+                    <strong>🚗 Attention</strong>
+                    <p>Ne pas utiliser en conduisant ou en opérant des machines. Réservé à un usage en position sécurisée.</p>
+                </div>
+                <div class="safety-item">
+                    <strong>💊 Santé Mentale</strong>
+                    <p>Consultez un professionnel si vous avez des troubles psychiatriques. L'usage prolongé peut altérer l'état de conscience.</p>
+                </div>
+            </div>
+            <label class="safety-checkbox">
+                <input type="checkbox" id="safetyAccept">
+                <span>J'ai lu et compris ces avertissements</span>
+            </label>
+            <button class="btn-primary" id="safetyConfirm" disabled>Continuer</button>
+        </div>
+    </div>
+
+    <!-- RITUAL INTENTION MODAL -->
+    <div id="ritualModal" class="modal" style="display:none;">
+        <div class="modal-content ritual-modal">
+            <div class="ritual-mandala-small"></div>
+            <h2>🕯️ Intention de Session</h2>
+            <p class="ritual-intro">Prenez un moment pour poser votre intention. Qu'est-ce que vous souhaitez cultiver pendant cette session ?</p>
+            <textarea id="ritualIntention" placeholder="Ex: Je souhaite trouver la clarté mentale et la paix intérieure..."></textarea>
+            <div class="ritual-presets">
+                <button class="ritual-preset" data-intent="paix">🕊️ Paix</button>
+                <button class="ritual-preset" data-intent="clarté">💎 Clarté</button>
+                <button class="ritual-preset" data-intent="guérison">💚 Guérison</button>
+                <button class="ritual-preset" data-intent="créativité">🎨 Créativité</button>
+                <button class="ritual-preset" data-intent="énergie">⚡ Énergie</button>
+                <button class="ritual-preset" data-intent="lâcher-prise">🍃 Lâcher-prise</button>
+            </div>
+            <div class="ritual-actions">
+                <button class="btn-secondary" id="skipRitual">Passer</button>
+                <button class="btn-primary" id="startRitual">🙏 Commencer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RITUAL CLOSING MODAL -->
+    <div id="closingModal" class="modal" style="display:none;">
+        <div class="modal-content closing-modal">
+            <div class="closing-mandala"></div>
+            <h2>🙏 Clôture de Session</h2>
+            <div class="closing-stats">
+                <div class="closing-stat">
+                    <span class="stat-value" id="closingDuration">--:--</span>
+                    <span class="stat-label">Durée</span>
+                </div>
+                <div class="closing-stat">
+                    <span class="stat-value" id="closingBreaths">--</span>
+                    <span class="stat-label">Respirations</span>
+                </div>
+                <div class="closing-stat">
+                    <span class="stat-value" id="closingSteps">--</span>
+                    <span class="stat-label">Pas</span>
+                </div>
+            </div>
+            <p class="closing-intention" id="closingIntentionDisplay"></p>
+            <textarea id="closingNotes" placeholder="Notes personnelles sur cette session..."></textarea>
+            <div class="closing-actions">
+                <button class="btn-secondary" id="exportSession">📤 Exporter</button>
+                <button class="btn-primary" id="closeRitual">Namaste 🙏</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIG PANEL -->
+    <div class="config-panel" id="configPanel">
+        <header class="header">
+            <div class="header-left">
+                <button class="btn-icon" id="menuBtn">☰</button>
+            </div>
+            <div class="header-center">
+                <h1 class="logo">Kasina<span>θ</span>Pro</h1>
+                <p class="subtitle">Neuro-Entrainment System</p>
+            </div>
+            <div class="header-right">
+                <button class="btn-icon" id="fullscreenBtn">⛶</button>
+                <button class="btn-icon" id="installBtn" style="display:none;">📲</button>
+            </div>
+        </header>
+
+        <!-- SIDE MENU -->
+        <nav class="side-menu" id="sideMenu">
+            <div class="menu-header">
+                <h3>Menu</h3>
+                <button class="btn-icon" id="closeMenuBtn">✕</button>
+            </div>
+            <ul class="menu-list">
+                <li><a href="#" id="menuNewSession">✦ Nouvelle Session</a></li>
+                <li><a href="#" id="menuLoadPreset">📂 Charger Preset</a></li>
+                <li><a href="#" id="menuSavePreset">💾 Sauvegarder Preset</a></li>
+                <li><a href="#" id="menuExportAudio">🎵 Exporter Audio</a></li>
+                <li class="menu-divider"></li>
+                <li><a href="#" id="menuSettings">⚙️ Paramètres</a></li>
+                <li><a href="#" id="menuCalibrate">📐 Calibration IMU</a></li>
+                <li><a href="#" id="menuLanguage">🌐 Langues Whispers</a></li>
+                <li class="menu-divider"></li>
+                <li><a href="#" id="menuAbout">ℹ️ À Propos</a></li>
+                <li><a href="#" id="menuDocs">📖 Documentation</a></li>
+            </ul>
+            <div class="menu-footer">
+                <span class="version">v2.0.0</span>
+                <span class="offline-indicator" id="offlineIndicator">🔴 Hors ligne</span>
+            </div>
+        </nav>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab active" data-tab="profiles">🧠 Profils</button>
+            <button class="tab" data-tab="audio">🎧 Audio</button>
+            <button class="tab" data-tab="visual">🌀 Visuel</button>
+            <button class="tab" data-tab="sync">☯ Sync</button>
+            <button class="tab" data-tab="sensors">📱 Capteurs</button>
+            <button class="tab" data-tab="export">📤 Export</button>
+        </div>
+
+        <!-- TAB: PROFILES -->
+        <div class="tab-content active" id="tab-profiles">
+            <div class="profiles-grid" id="profilesGrid"></div>
+            <div class="subprofiles-grid" id="subprofilesGrid"></div>
+            
+            <!-- EEG SWEEP PROFILES -->
+            <div class="card sweep-card">
+                <h3 class="card-title"><span class="icon sweep-icon">📈</span> EEG Phase Sweep</h3>
+                <div class="sweep-presets">
+                    <button class="sweep-btn" data-sweep="theta-alpha">θ → α Éveil Doux</button>
+                    <button class="sweep-btn" data-sweep="delta-theta">δ → θ Émergence</button>
+                    <button class="sweep-btn" data-sweep="alpha-beta">α → β Activation</button>
+                    <button class="sweep-btn" data-sweep="beta-alpha-theta">β → α → θ Descente</button>
+                    <button class="sweep-btn" data-sweep="full-cycle">Cycle Complet ↻</button>
+                </div>
+                <div class="sweep-visualizer" id="sweepVisualizer">
+                    <canvas id="sweepCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: AUDIO -->
+        <div class="tab-content" id="tab-audio">
+            <div class="cards-grid">
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">θ</span> Battements Binauraux</h3>
+                    <div class="freq-display">
+                        <div class="freq-item">
+                            <div class="value" id="freqLeftDisplay">210</div>
+                            <div class="label">Hz Gauche</div>
+                        </div>
+                        <div class="freq-diff" id="freqDiffDisplay">Δ 4 Hz θ</div>
+                        <div class="freq-item">
+                            <div class="value" id="freqRightDisplay">214</div>
+                            <div class="label">Hz Droite</div>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>L Pitch (Hz)</label>
+                            <input type="number" id="freqLeft" value="210" min="50" max="655">
+                        </div>
+                        <div class="control-group">
+                            <label>R Pitch (Hz)</label>
+                            <input type="number" id="freqRight" value="214" min="50" max="655">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Volume Tons</label>
+                        <div class="slider-row">
+                            <input type="range" id="toneVolume" min="-40" max="0" value="-12">
+                            <span class="value-display" id="toneVolumeDisplay">-12 dB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon waveform-icon">〰</span> Forme d'Onde</h3>
+                    <div class="control-group">
+                        <label>Waveform</label>
+                        <div class="waveform-selector" id="sndWaveform">
+                            <button class="waveform-btn active" data-wf="sine"><span class="wf-icon">∿</span>Sine</button>
+                            <button class="waveform-btn" data-wf="square"><span class="wf-icon">⊓</span>Square</button>
+                            <button class="waveform-btn" data-wf="triangle"><span class="wf-icon">△</span>Tri</button>
+                            <button class="waveform-btn" data-wf="sawtooth"><span class="wf-icon">⋀</span>Saw</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Anti-Habituation (micro-variations)</label>
+                        <div class="slider-row">
+                            <input type="range" id="antiHabituation" min="0" max="100" value="15">
+                            <span class="value-display" id="antiHabituationDisplay">15%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon pink-icon">♫</span> Pink Noise & Whispers</h3>
+                    <div class="control-group">
+                        <label>Pink Noise</label>
+                        <div class="slider-row">
+                            <input type="range" id="noiseVolume" min="-50" max="-10" value="-30">
+                            <span class="value-display" id="noiseVolumeDisplay">-30 dB</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Whisper Volume</label>
+                        <div class="slider-row">
+                            <input type="range" id="whisperVolume" min="-40" max="-15" value="-25">
+                            <span class="value-display" id="whisperVolumeDisplay">-25 dB</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Langue Whispers</label>
+                        <select id="whisperLang">
+                            <option value="fr" selected>🇫🇷 Français</option>
+                            <option value="en">🇬🇧 English</option>
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="de">🇩🇪 Deutsch</option>
+                            <option value="it">🇮🇹 Italiano</option>
+                            <option value="pt">🇵🇹 Português</option>
+                            <option value="ja">🇯🇵 日本語</option>
+                            <option value="zh">🇨🇳 中文</option>
+                            <option value="sa">🕉️ Sanskrit</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon encoding-icon">📡</span> Encodage Lumineux</h3>
+                    <div class="encoding-selector">
+                        <button class="encoding-btn none active" data-encoding="none">🔇 Aucun</button>
+                        <button class="encoding-btn as" data-encoding="audiostrobe">💡 AudioStrobe®</button>
+                        <button class="encoding-btn ss" data-encoding="spectrastrobe">🌈 SpectraStrobe™</button>
+                    </div>
+                    <div class="control-group" id="encodingParams" style="display:none;">
+                        <label>Carrier Frequency (kHz)</label>
+                        <div class="slider-row">
+                            <input type="range" id="carrierFreq" min="17000" max="20000" value="19000" step="100">
+                            <span class="value-display" id="carrierFreqDisplay">19.0 kHz</span>
+                        </div>
+                        <label>Encoding Level (dB)</label>
+                        <div class="slider-row">
+                            <input type="range" id="encodingLevel" min="-30" max="-10" value="-18">
+                            <span class="value-display" id="encodingLevelDisplay">-18 dB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: VISUAL -->
+        <div class="tab-content" id="tab-visual">
+            <div class="cards-grid">
+                <div class="card span-2">
+                    <h3 class="card-title"><span class="icon mandala-icon">🌀</span> Géométrie Sacrée</h3>
+                    <div class="mandala-preview" id="mandalaPreview">
+                        <canvas id="mandalaCanvas"></canvas>
+                    </div>
+                    <div class="mandala-controls">
+                        <div class="control-group">
+                            <label>Motif</label>
+                            <select id="mandalaPattern">
+                                <option value="flower">🌸 Fleur de Vie</option>
+                                <option value="sri-yantra">🔺 Sri Yantra</option>
+                                <option value="metatron">⬡ Cube de Métatron</option>
+                                <option value="torus">🍩 Torus</option>
+                                <option value="fibonacci">🐚 Spirale Fibonacci</option>
+                                <option value="vesica">👁️ Vesica Piscis</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Pétales / Segments</label>
+                            <div class="slider-row">
+                                <input type="range" id="mandalaPetals" min="3" max="24" value="8">
+                                <span class="value-display" id="mandalaPetalsDisplay">8</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>Couches</label>
+                            <div class="slider-row">
+                                <input type="range" id="mandalaLayers" min="1" max="8" value="4">
+                                <span class="value-display" id="mandalaLayersDisplay">4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">👓</span> GanzFrames</h3>
+                    <div class="ganzframe-preview">
+                        <div class="eye-preview" id="eyeLeftPreview"></div>
+                        <div class="eye-preview" id="eyeRightPreview"></div>
+                    </div>
+                    <div class="control-group">
+                        <label>Beat Frequency (Hz)</label>
+                        <div class="slider-row">
+                            <input type="range" id="beatFreq" min="0.5" max="40" value="4" step="0.5">
+                            <span class="value-display" id="beatFreqDisplay">4 Hz</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Brightness (%)</label>
+                        <div class="slider-row">
+                            <input type="range" id="brightness" min="0" max="100" value="70">
+                            <span class="value-display" id="brightnessDisplay">70%</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>L/R Phase (%)</label>
+                        <div class="slider-row">
+                            <input type="range" id="lightPhase" min="0" max="100" value="50">
+                            <span class="value-display" id="lightPhaseDisplay">50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon rgb-icon">🎨</span> Couleurs RGB</h3>
+                    <div class="rgb-sliders">
+                        <div class="rgb-slider red">
+                            <label><span class="color-dot"></span> R</label>
+                            <input type="range" class="red" id="redValue" min="0" max="100" value="50">
+                            <span class="value-display" id="redDisplay">50%</span>
+                        </div>
+                        <div class="rgb-slider green">
+                            <label><span class="color-dot"></span> G</label>
+                            <input type="range" class="green" id="greenValue" min="0" max="100" value="30">
+                            <span class="value-display" id="greenDisplay">30%</span>
+                        </div>
+                        <div class="rgb-slider blue">
+                            <label><span class="color-dot"></span> B</label>
+                            <input type="range" class="blue" id="blueValue" min="0" max="100" value="100">
+                            <span class="value-display" id="blueDisplay">100%</span>
+                        </div>
+                    </div>
+                    <div class="color-presets">
+                        <button class="color-preset" data-r="20" data-g="20" data-b="100" style="background:#3333ff;">Delta</button>
+                        <button class="color-preset" data-r="50" data-g="30" data-b="100" style="background:#7c4dff;">Theta</button>
+                        <button class="color-preset" data-r="30" data-g="100" data-b="70" style="background:#4dffb3;">Alpha</button>
+                        <button class="color-preset" data-r="100" data-g="70" data-b="20" style="background:#ffb333;">Beta</button>
+                        <button class="color-preset" data-r="100" data-g="30" data-b="60" style="background:#ff4d99;">Gamma</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">✨</span> Effets Halo</h3>
+                    <div class="control-group">
+                        <label>Intensité Halo</label>
+                        <div class="slider-row">
+                            <input type="range" id="haloIntensity" min="0" max="100" value="60">
+                            <span class="value-display" id="haloIntensityDisplay">60%</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Pulsation Sync</label>
+                        <select id="haloPulseSync">
+                            <option value="beat">Beat Lumineux</option>
+                            <option value="breath" selected>Respiration</option>
+                            <option value="heart">Fréquence Cardiaque</option>
+                            <option value="walk">Pas de Marche</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Particules</label>
+                        <div class="slider-row">
+                            <input type="range" id="particleCount" min="0" max="200" value="50">
+                            <span class="value-display" id="particleCountDisplay">50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: SYNC -->
+        <div class="tab-content" id="tab-sync">
+            <div class="cards-grid">
+                <div class="card">
+                    <h3 class="card-title"><span class="icon breath-icon">☯</span> Respiration</h3>
+                    <div class="breath-pattern-visual" id="breathPatternVisual">
+                        <svg viewBox="0 0 200 60" id="breathSvg"></svg>
+                    </div>
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>Inspire (s)</label>
+                            <input type="number" id="breathInhale" value="4" min="2" max="12">
+                        </div>
+                        <div class="control-group">
+                            <label>Retient (s)</label>
+                            <input type="number" id="breathHold" value="4" min="0" max="12">
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>Expire (s)</label>
+                            <input type="number" id="breathExhale" value="6" min="2" max="14">
+                        </div>
+                        <div class="control-group">
+                            <label>Pause (s)</label>
+                            <input type="number" id="breathPause" value="2" min="0" max="8">
+                        </div>
+                    </div>
+                    <div class="breath-presets">
+                        <button class="breath-preset" data-pattern="4-4-4-4">⬜ Carré 4-4-4-4</button>
+                        <button class="breath-preset" data-pattern="4-7-8-0">😴 Relaxant 4-7-8</button>
+                        <button class="breath-preset" data-pattern="5-5-5-5">⬜ Carré 5-5-5-5</button>
+                        <button class="breath-preset" data-pattern="4-0-6-2">🧘 Cohérence 4-0-6-2</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon walk-icon">👣</span> Marche Méditative</h3>
+                    <div class="control-group">
+                        <label>Tempo (bpm)</label>
+                        <div class="slider-row">
+                            <input type="range" id="walkTempo" min="40" max="120" value="60">
+                            <span class="value-display" id="walkTempoDisplay">60 bpm</span>
+                        </div>
+                    </div>
+                    <div class="walk-tempo-presets">
+                        <button class="tempo-preset" data-tempo="45">🐢 Contemplatif</button>
+                        <button class="tempo-preset" data-tempo="60">🚶 Méditatif</button>
+                        <button class="tempo-preset" data-tempo="80">🏃 Dynamique</button>
+                        <button class="tempo-preset" data-tempo="0">📱 Auto (IMU)</button>
+                    </div>
+                    <div class="vma-display" id="vmaDisplay" style="display:none;">
+                        <div class="vma-value">
+                            <span id="currentVMA">--</span>
+                            <small>pas/min détectés</small>
+                        </div>
+                        <div class="vma-graph">
+                            <canvas id="vmaCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">🌬️</span> Détection Souffle</h3>
+                    <div class="breath-detection" id="breathDetection">
+                        <div class="mic-indicator" id="micIndicator">
+                            <div class="mic-icon">🎤</div>
+                            <div class="mic-level" id="micLevel"></div>
+                        </div>
+                        <button class="btn-secondary" id="enableMicBtn">Activer Micro</button>
+                        <p class="breath-status" id="breathStatus">Micro désactivé</p>
+                    </div>
+                    <div class="control-group">
+                        <label>Sensibilité</label>
+                        <div class="slider-row">
+                            <input type="range" id="micSensitivity" min="1" max="100" value="50">
+                            <span class="value-display" id="micSensitivityDisplay">50%</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Mode Sync</label>
+                        <select id="breathSyncMode">
+                            <option value="guide">Guide (imposé)</option>
+                            <option value="follow">Suivre (adaptatif)</option>
+                            <option value="hybrid">Hybride</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">✦</span> Whispers Sync</h3>
+                    <div class="sync-modes">
+                        <button class="sync-mode-btn active" data-mode="breath">☯ Respiration</button>
+                        <button class="sync-mode-btn" data-mode="walk">👣 Marche</button>
+                        <button class="sync-mode-btn" data-mode="interval">⏱ Intervalle</button>
+                    </div>
+                    <div class="control-group" id="intervalControl" style="display:none;">
+                        <label>Intervalle (s)</label>
+                        <div class="slider-row">
+                            <input type="range" id="whisperInterval" min="10" max="60" value="20">
+                            <span class="value-display" id="whisperIntervalDisplay">20s</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Affirmations Personnalisées</label>
+                        <textarea id="whisperText" placeholder="Séparez par des virgules...">tu es aimé, tu es en sécurité, tout est bien</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: SENSORS -->
+        <div class="tab-content" id="tab-sensors">
+            <div class="cards-grid">
+                <div class="card span-2">
+                    <h3 class="card-title"><span class="icon imu-icon">📱</span> IMU - Accéléromètre & Gyroscope</h3>
+                    <div class="imu-display">
+                        <div class="imu-3d" id="imu3D">
+                            <canvas id="imuCanvas"></canvas>
+                        </div>
+                        <div class="imu-data">
+                            <div class="imu-row">
+                                <span class="imu-label">Accel X:</span>
+                                <span class="imu-value" id="accelX">--</span>
+                            </div>
+                            <div class="imu-row">
+                                <span class="imu-label">Accel Y:</span>
+                                <span class="imu-value" id="accelY">--</span>
+                            </div>
+                            <div class="imu-row">
+                                <span class="imu-label">Accel Z:</span>
+                                <span class="imu-value" id="accelZ">--</span>
+                            </div>
+                            <div class="imu-row">
+                                <span class="imu-label">Pas détectés:</span>
+                                <span class="imu-value" id="imuSteps">0</span>
+                            </div>
+                            <div class="imu-row">
+                                <span class="imu-label">Cadence:</span>
+                                <span class="imu-value" id="imuCadence">-- bpm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="imu-actions">
+                        <button class="btn-secondary" id="enableImuBtn">📱 Activer IMU</button>
+                        <button class="btn-secondary" id="calibrateImuBtn" disabled>📐 Calibrer</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon fatigue-icon">🧠</span> Détection Fatigue</h3>
+                    <div class="fatigue-display">
+                        <div class="fatigue-gauge" id="fatigueGauge">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="gauge-bg" cx="50" cy="50" r="40"/>
+                                <circle class="gauge-fill" id="fatigueFill" cx="50" cy="50" r="40"/>
+                                <text class="gauge-text" id="fatigueText" x="50" y="55">--</text>
+                            </svg>
+                        </div>
+                        <div class="fatigue-info">
+                            <p><strong>Variabilité du pas:</strong> <span id="stepVariability">--</span></p>
+                            <p><strong>Régularité:</strong> <span id="stepRegularity">--</span></p>
+                            <p><strong>Tendance:</strong> <span id="fatigueTrend">--</span></p>
+                        </div>
+                    </div>
+                    <div class="fatigue-actions">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="autoAdjustFatigue">
+                            <span>Ajustement auto du tempo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">📊</span> Statistiques Temps Réel</h3>
+                    <div class="realtime-stats">
+                        <div class="stat-box">
+                            <span class="stat-icon">🫀</span>
+                            <span class="stat-value" id="estimatedHR">--</span>
+                            <span class="stat-label">BPM estimé</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-icon">🌬️</span>
+                            <span class="stat-value" id="breathRate">--</span>
+                            <span class="stat-label">Resp/min</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-icon">⚡</span>
+                            <span class="stat-value" id="coherenceScore">--</span>
+                            <span class="stat-label">Cohérence</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: EXPORT -->
+        <div class="tab-content" id="tab-export">
+            <div class="cards-grid">
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">⏱</span> Session</h3>
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>Durée (min)</label>
+                            <input type="number" id="duration" value="30" min="1" max="120">
+                        </div>
+                        <div class="control-group">
+                            <label>Fade (s)</label>
+                            <input type="number" id="fadeTime" value="5" min="0" max="30">
+                        </div>
+                    </div>
+                    <div class="duration-presets">
+                        <button class="duration-preset" data-dur="5">5 min</button>
+                        <button class="duration-preset" data-dur="15">15 min</button>
+                        <button class="duration-preset" data-dur="30">30 min</button>
+                        <button class="duration-preset" data-dur="45">45 min</button>
+                        <button class="duration-preset" data-dur="60">60 min</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><span class="icon">📤</span> Formats Export</h3>
+                    <div class="export-options">
+                        <button class="export-btn" id="exportWav">🎵 WAV</button>
+                        <button class="export-btn" id="exportMp3">🎵 MP3</button>
+                        <button class="export-btn" id="exportKbs">📄 KBS</button>
+                        <button class="export-btn" id="exportPreset">💾 Preset</button>
+                    </div>
+                    <div class="info-box" id="exportInfo">
+                        Sélectionnez un format d'export. Les fichiers audio incluront l'encodage AudioStrobe/SpectraStrobe si activé.
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <div class="action-row">
+                        <button class="btn-secondary" id="previewBtn">▶ Prévisualiser</button>
+                        <button class="btn-secondary" id="stopPreviewBtn" style="display:none;">■ Arrêter</button>
+                        <button class="btn-secondary" id="resetBtn">↺ Reset</button>
+                        <button class="btn-secondary" id="ritualModeBtn">🕯️ Mode Rituel</button>
+                    </div>
+                    <button class="btn-primary" id="generateBtn">✦ Générer & Lancer la Session</button>
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                        <p class="progress-text" id="progressText">Préparation...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLAYER INTERFACE -->
+    <div class="player-interface" id="playerInterface">
+        <div class="visual-area" id="visualArea">
+            <canvas id="mainCanvas"></canvas>
+            
+            <!-- Profile Indicator -->
+            <div class="profile-indicator" id="profileIndicator">
+                <span class="profile-wave" id="playerWaveSymbol">θ</span>
+                <div class="profile-info">
+                    <div class="profile-name" id="playerProfileName">Theta</div>
+                    <div class="profile-sub" id="playerSubprofileName">Méditation</div>
+                </div>
+            </div>
+
+            <!-- Encoding Badge -->
+            <div class="encoding-badge" id="encodingBadge" style="display:none;">
+                <span id="encodingBadgeText">AudioStrobe®</span>
+            </div>
+
+            <!-- GanzFrame Visual -->
+            <div class="ganzframe-visual">
+                <div class="ganz-eye" id="ganzLeftEye"></div>
+                <div class="ganz-eye" id="ganzRightEye"></div>
+            </div>
+
+            <!-- Breath Guide -->
+            <div class="breath-guide" id="breathGuide">
+                <div class="breath-circle" id="breathCircle">
+                    <div class="breath-inner">
+                        <span class="breath-text" id="breathText">Inspire</span>
+                        <span class="breath-timer" id="breathTimer">4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Whisper Display -->
+            <div class="whisper-indicator" id="whisperIndicator">
+                <span class="whisper-text" id="whisperDisplay">tu es aimé</span>
+            </div>
+
+            <!-- Walk Indicator -->
+            <div class="walk-indicator" id="walkIndicator">
+                <div class="footstep left" id="footLeft"></div>
+                <div class="footstep right" id="footRight"></div>
+            </div>
+
+            <!-- Intention Display -->
+            <div class="intention-display" id="intentionDisplay" style="display:none;">
+                <span id="intentionText"></span>
+            </div>
+        </div>
+
+        <!-- Player Controls -->
+        <div class="player-controls">
+            <button class="player-btn" id="playPauseBtn">
+                <svg class="play-icon" id="playIcon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                <svg class="pause-icon" id="pauseIcon" viewBox="0 0 24 24" style="display:none;"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+            </button>
+            <div class="time-display">
+                <span class="current" id="currentTime">0:00</span>
+                <span class="separator">/</span>
+                <span id="totalTime">30:00</span>
+            </div>
+            <div class="player-progress" id="playerProgress">
+                <div class="progress-fill" id="playerProgressFill"></div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="value" id="statBreaths">0</span>
+                    <span class="label">Resp</span>
+                </div>
+                <div class="stat-item">
+                    <span class="value" id="statSteps">0</span>
+                    <span class="label">Pas</span>
+                </div>
+                <div class="stat-item">
+                    <span class="value" id="statCoherence">--</span>
+                    <span class="label">Coh</span>
+                </div>
+            </div>
+            <button class="btn-close-player" id="closePlayerBtn">Terminer</button>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+    <script src="js/profiles.js"></script>
+    <script src="js/audio-engine.js"></script>
+    <script src="js/visual-engine.js"></script>
+    <script src="js/sensors.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

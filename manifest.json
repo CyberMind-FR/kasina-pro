@@ -1,0 +1,102 @@
+{
+  "name": "Kasina θ Pro - Neuro-Entrainment System",
+  "short_name": "Kasina Pro",
+  "description": "Générateur de sessions audio-visuelles pour méditation, entraînement cérébral et bien-être avec AudioStrobe® et SpectraStrobe™",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0f",
+  "theme_color": "#7c6aef",
+  "lang": "fr",
+  "categories": ["health", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshot-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Écran principal avec profils d'ondes cérébrales"
+    },
+    {
+      "src": "assets/screenshot-2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Session en cours avec mandala"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouvelle session Theta",
+      "short_name": "Theta",
+      "description": "Lancer une session de méditation Theta",
+      "url": "/index.html?profile=theta",
+      "icons": [{ "src": "assets/icon-theta.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Session Relaxation",
+      "short_name": "Relax",
+      "description": "Lancer une session Alpha relaxation",
+      "url": "/index.html?profile=alpha",
+      "icons": [{ "src": "assets/icon-alpha.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Focus Beta",
+      "short_name": "Focus",
+      "description": "Lancer une session concentration Beta",
+      "url": "/index.html?profile=beta",
+      "icons": [{ "src": "assets/icon-beta.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
